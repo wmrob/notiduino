@@ -1,6 +1,7 @@
 package com.example.doohans.notifytest26_1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -29,21 +30,31 @@ public class AppsManager {
 
     private void loadApps() {
 
+
         // Flags: See below
-        int flags = PackageManager.GET_META_DATA |
-                PackageManager.GET_SHARED_LIBRARY_FILES;
+        //int flags = PackageManager.GET_META_DATA | PackageManager.GET_SHARED_LIBRARY_FILES;
 
-        List<ApplicationInfo> packages = mContext.getPackageManager().getInstalledApplications(flags);
+        List<ApplicationInfo> packages = mContext.getPackageManager().getInstalledApplications(0);
         for (ApplicationInfo packageInfo : packages) {
-           
-            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) continue;
+            boolean isSystemApp = false;
 
-            AppInfo newApp = new AppInfo();
+            if (packageInfo == null) continue;
 
-            newApp.setAppName(getApplicationLabelByPackageName(packageInfo.packageName));
-            newApp.setAppPackage(packageInfo.packageName);
-            newApp.setAppIcon(getAppIconByPackageName(packageInfo.packageName));
-            myApps.add(newApp);
+            //if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) isSystemApp = true;
+
+            if (!isSystemApp) {
+
+                AppInfo newApp = new AppInfo();
+
+                newApp.setAppName(getApplicationLabelByPackageName(packageInfo.packageName));
+                newApp.setAppPackage(packageInfo.packageName);
+                newApp.setAppIcon(getAppIconByPackageName(packageInfo.packageName));
+
+                //db check
+                //newApp.setSelected(true);
+
+                myApps.add(newApp);
+            }
         }
 
         Collections.sort(myApps, new Comparator<AppInfo>() {

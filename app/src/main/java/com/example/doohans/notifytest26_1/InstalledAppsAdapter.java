@@ -3,10 +3,12 @@ package com.example.doohans.notifytest26_1;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,12 +17,18 @@ import java.util.ArrayList;
 
 public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(AppInfo item);
+    }
+
     private Context mContext;
     private ArrayList<AppInfo> mDataSet;
+    private final OnItemClickListener mListener;
 
-    public InstalledAppsAdapter(Context context, ArrayList<AppInfo> list) {
+    public InstalledAppsAdapter(Context context, ArrayList<AppInfo> list, OnItemClickListener listener) {
         mContext = context;
         mDataSet = list;
+        mListener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -73,14 +81,32 @@ public class InstalledAppsAdapter extends RecyclerView.Adapter<InstalledAppsAdap
 
         holder.mAppSelect.setChecked(mDataSet.get(position).isSelected());
 
+        holder.mAppSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+                                                     {
+                                                         @Override
+                                                         public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                                                             mDataSet.get(position).setSelected(isChecked);
+                                                             InstalledAppsAdapter.this.mListener.onItemClick(mDataSet.get(position));
+
+                                                             Log.i("InstalledAppsAdapter", "[doohans] chckeckbox Text:" + isChecked);
+                                                         }
+                                                     }
+        );
+
+        /*
         holder.mItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 mDataSet.get(position).setSelected(!mDataSet.get(position).isSelected());
                 InstalledAppsAdapter.this.notifyDataSetChanged();
+
+
+                Log.i("InstalledAppsAdapter", "[doohans] item Text:" );
             }
         });
-
+*/
 
     }
 
