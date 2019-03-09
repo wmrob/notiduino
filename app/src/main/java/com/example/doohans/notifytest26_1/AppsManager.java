@@ -32,15 +32,17 @@ public class AppsManager {
 
 
         // Flags: See below
-        //int flags = PackageManager.GET_META_DATA | PackageManager.GET_SHARED_LIBRARY_FILES;
+        int flags = PackageManager.GET_META_DATA | PackageManager.GET_SHARED_LIBRARY_FILES;
 
-        List<ApplicationInfo> packages = mContext.getPackageManager().getInstalledApplications(0);
+        List<ApplicationInfo> packages = mContext.getPackageManager().getInstalledApplications(flags);
         for (ApplicationInfo packageInfo : packages) {
             boolean isSystemApp = false;
 
             if (packageInfo == null) continue;
 
-            //if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) isSystemApp = true;
+            if ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) isSystemApp = true;
+
+            if (packageInfo.packageName.equals("com.android.mms")) isSystemApp = false;
 
             if (!isSystemApp) {
 
